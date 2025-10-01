@@ -1,4 +1,5 @@
 package br.monitoramento.motu.model;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -7,71 +8,31 @@ import java.time.LocalDateTime;
 public class LocalizacaoMotoRFID {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_localizacao")
+    // Se quiser autogerar, torne a coluna AUTO_INCREMENT no schema e habilite @GeneratedValue
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idLocalizacao;
 
-    @ManyToOne
-    @JoinColumn(name = "id_moto", nullable = false)
-    private Moto moto;
+    // Mantendo FKs como IDs simples, igual fizemos em Moto
+    @Column(name = "id_moto", nullable = false)
+    private Long idMoto;
 
-    @ManyToOne
-    @JoinColumn(name = "id_sensor", nullable = false)
-    private SensorRFID sensorRFID;
-
-    @Column(name = "nr_x", nullable = false)
-    private Double nrX;
-
-    @Column(name = "nr_y", nullable = false)
-    private Double nrY;
+    @Column(name = "id_sensor", nullable = false)
+    private Long idSensor;
 
     @Column(name = "dt_localizacao", nullable = false)
     private LocalDateTime dtLocalizacao;
 
-    public Long getIdLocalizacao() {
-        return idLocalizacao;
-    }
+    // getters/setters
+    public Long getIdLocalizacao() { return idLocalizacao; }
+    public void setIdLocalizacao(Long idLocalizacao) { this.idLocalizacao = idLocalizacao; }
 
-    public void setIdLocalizacao(Long idLocalizacao) {
-        this.idLocalizacao = idLocalizacao;
-    }
+    public Long getIdMoto() { return idMoto; }
+    public void setIdMoto(Long idMoto) { this.idMoto = idMoto; }
 
-    public Moto getMoto() {
-        return moto;
-    }
+    public Long getIdSensor() { return idSensor; }
+    public void setIdSensor(Long idSensor) { this.idSensor = idSensor; }
 
-    public void setMoto(Moto moto) {
-        this.moto = moto;
-    }
-
-    public SensorRFID getSensorRFID() {
-        return sensorRFID;
-    }
-
-    public void setSensorRFID(SensorRFID sensorRFID) {
-        this.sensorRFID = sensorRFID;
-    }
-
-    public Double getNrX() {
-        return nrX;
-    }
-
-    public void setNrX(Double nrX) {
-        this.nrX = nrX;
-    }
-
-    public Double getNrY() {
-        return nrY;
-    }
-
-    public void setNrY(Double nrY) {
-        this.nrY = nrY;
-    }
-
-    public LocalDateTime getDtLocalizacao() {
-        return dtLocalizacao;
-    }
-
-    public void setDtLocalizacao(LocalDateTime dtLocalizacao) {
-        this.dtLocalizacao = dtLocalizacao;
-    }
+    public LocalDateTime getDtLocalizacao() { return dtLocalizacao; }
+    public void setDtLocalizacao(LocalDateTime dtLocalizacao) { this.dtLocalizacao = dtLocalizacao; }
 }
