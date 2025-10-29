@@ -1,19 +1,22 @@
 # Etapa de build
 FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
+
 COPY pom.xml .
+RUN mvn -q -DskipTests dependency:go-offline
+
 COPY src ./src
-RUN mvn -q -DskipTests package
+# força o repackage (fat jar com Main-Class)
+RUN mvn -q -DskipTests clean package spring-boot:repackage
 
 # Etapa de runtime
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Copia o JAR gerado
-COPY --from=build /app/target/*.jar app.jar
+# copia apenas o jar final (evita original-*.jar)
+COPY --from=build /app/target/*-SNAPSHOT.jar app.jar
+# se preferir fixo:
+# COPY --from=build /app/target/mottu-0.0.1-SNAPSHOT.jar app.jar
 
-# Expõe a porta padrão (apenas documentação)
 EXPOSE 8080
-
-# Render define $PORT -> Spring Boot vai usar se configurado
-ENTRYPOINT ["sh", "-c", "java -Dserver.port=$PORT -Dserver.address=0.0.0.0 -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -Dserver.address=0.0.0.0 -jar app.jar"]
