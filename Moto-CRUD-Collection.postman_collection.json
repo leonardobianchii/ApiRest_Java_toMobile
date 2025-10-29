@@ -1,0 +1,98 @@
+{
+  "info": {
+    "name": "Mottu - Moto CRUD",
+    "_postman_id": "3a5b3c42-dc1a-4b45-8b4c-dc2b29e36e7a",
+    "description": "Coleção de testes CRUD para a entidade Moto.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET - Listar todas as motos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/motos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "motos"]
+        }
+      }
+    },
+    {
+      "name": "GET - Buscar moto por ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/motos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "motos", "1"]
+        }
+      }
+    },
+    {
+      "name": "POST - Criar moto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": 6,\n    \"idModelo\": 1,\n    \"idFilial\": 1,\n    \"placa\": \"XYZ1A23\",\n    \"status\": \"DISPONIVEL\",\n    \"kmRodado\": 0\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/motos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "motos"]
+        }
+      }
+    },
+    {
+      "name": "PUT - Atualizar moto",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": 2,\n    \"idModelo\": 1,\n    \"idFilial\": 1,\n    \"placa\": \"XYZ1A23\",\n    \"status\": \"EM_USO\",\n    \"kmRodado\": 150\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/motos/2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "motos", "2"]
+        }
+      }
+    },
+    {
+      "name": "DELETE - Excluir moto",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/motos/2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "motos", "2"]
+        }
+      }
+    }
+  ]
+}
