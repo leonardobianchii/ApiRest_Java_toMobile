@@ -25,7 +25,7 @@ public class MotoController {
     }
 
     @GetMapping("/{id}")
-    public MotoDto getById(@PathVariable Integer id) {
+    public MotoDto getById(@PathVariable("id") Integer id) {
         return service.findById(id);
     }
 
@@ -35,13 +35,13 @@ public class MotoController {
     }
 
     @PutMapping("/{id}")
-    public MotoDto update(@PathVariable Integer id, @Valid @RequestBody MotoDto dto) {
+    public MotoDto update(@PathVariable("id") Integer id, @Valid @RequestBody MotoDto dto) {
         return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable("id") Integer id) {
         service.delete(id);
     }
 }
