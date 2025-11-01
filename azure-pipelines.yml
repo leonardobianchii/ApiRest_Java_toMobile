@@ -7,10 +7,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  # nome da aplicação exigido
-  appName: 'mottupipeline'
+  # nome da aplicação
+  appName: 'rm558576mottu'
 
-  # nome do ACR que você criou
+  # nome do ACR
   acrName: 'rm558576mottu'
 
   # login server do ACR
@@ -22,11 +22,11 @@ variables:
   # tag da imagem será o número do build
   imageTag: '$(Build.BuildId)'
 
-  # service connection que você criou
-  dockerRegistryServiceConnection: 'sc-azure-lorch'
+  # service connection existente no Azure DevOps
+  dockerRegistryServiceConnection: 'sc-acr-lorch'
 
-  # caminho do Dockerfile (troca se não estiver na raiz)
-  dockerfilePath: '**/Dockerfile'
+  # caminho do Dockerfile (na raiz)
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
 
 steps:
   - checkout: self
@@ -34,7 +34,7 @@ steps:
   - task: Docker@2
     displayName: 'Build and push image to ACR'
     inputs:
-      command: 'buildAndPush'
+      command: buildAndPush
       containerRegistry: '$(dockerRegistryServiceConnection)'
       repository: '$(imageRepository)'
       dockerfile: '$(dockerfilePath)'
@@ -43,6 +43,6 @@ steps:
       buildContext: '$(Build.SourcesDirectory)'
 
   - script: |
-      echo "Imagem publicada em:"
-      echo "$(acrLoginServer)/$(imageRepository):$(imageTag)"
+      echo "✅ Imagem publicada com sucesso!"
+      echo "Imagem: $(acrLoginServer)/$(imageRepository):$(imageTag)"
     displayName: 'Mostrar imagem publicada'
