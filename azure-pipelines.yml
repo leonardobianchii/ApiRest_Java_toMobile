@@ -51,20 +51,25 @@ steps:
         LOCATION='$(location)'
         PORT='$(containerPort)'
 
-        az acr login --name $ACR_NAME
+        # Credenciais do ACR diretamente da conta (admin habilitado)
+        ACR_USER=$(az acr credential show -n "$ACR_NAME" --query username -o tsv)
+        ACR_PASS=$(az acr credential show -n "$ACR_NAME" --query "passwords[0].value" -o tsv)
 
-        az container delete --name $ACI_NAME --resource-group $RESOURCE_GROUP --yes --only-show-errors || true
+        # DNS label único por build para evitar conflito
+        DNS_LABEL="${ACI_NAME}-${BUILD_BUILDID}"
+
+        az container delete --name "$ACI_NAME" --resource-group "$RESOURCE_GROUP" --yes --only-show-errors || true
 
         az container create \
-          --name $ACI_NAME \
-          --resource-group $RESOURCE_GROUP \
-          --location $LOCATION \
-          --image $ACR_LOGIN_SERVER/$IMAGE_NAME:$TAG \
+          --name "$ACI_NAME" \
+          --resource-group "$RESOURCE_GROUP" \
+          --location "$LOCATION" \
+          --image "$ACR_LOGIN_SERVER/$IMAGE_NAME:$TAG" \
           --cpu 1 \
           --memory 1.5 \
-          --dns-name-label $ACI_NAME \
-          --ports $PORT \
+          --dns-name-label "$DNS_LABEL" \
+          --ports "$PORT" \
+          --registry-login-server "$ACR_LOGIN_SERVER" \
+          --registry-username "$ACR_USER" \
+          --registry-password "$ACR_PASS" \
           --os-type Linux
-          --registry-login-server $ACR_LOGIN_SERVER \
-          --registry-username '$(acrUsername)' \
-          --registry-password '$(acrPassword)'
