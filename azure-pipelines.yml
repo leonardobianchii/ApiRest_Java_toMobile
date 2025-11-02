@@ -41,7 +41,7 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
-        set -e
+        set -euo pipefail
         ACR_NAME='$(acrName)'
         ACR_LOGIN_SERVER='$(acrLoginServer)'
         IMAGE_NAME='$(imageRepository)'
@@ -50,8 +50,11 @@ steps:
         RESOURCE_GROUP='$(resourceGroup)'
         LOCATION='$(location)'
         PORT='$(containerPort)'
+
         az acr login --name $ACR_NAME
+
         az container delete --name $ACI_NAME --resource-group $RESOURCE_GROUP --yes --only-show-errors || true
+
         az container create \
           --name $ACI_NAME \
           --resource-group $RESOURCE_GROUP \
@@ -62,4 +65,5 @@ steps:
           --dns-name-label $ACI_NAME \
           --ports $PORT \
           --registry-login-server $ACR_LOGIN_SERVER \
-          --assign-identity
+          --registry-username '$(acrUsername)' \
+          --registry-password '$(acrPassword)'
