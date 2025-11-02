@@ -7,26 +7,18 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  # nome da aplicação
   appName: 'rm558576mottu'
-
-  # nome do ACR
   acrName: 'rm558576mottu'
-
-  # login server do ACR
   acrLoginServer: 'rm558576mottu.azurecr.io'
-
-  # repositório da imagem dentro do ACR
   imageRepository: 'fiap/$(appName)'
-
-  # tag da imagem será o número do build
   imageTag: '$(Build.BuildId)'
-
-  # service connection existente no Azure DevOps
   dockerRegistryServiceConnection: 'sc-acr-lorch'
-
-  # caminho do Dockerfile (na raiz)
+  azureSubscription: 'sc-azure-smartcheck'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  aciName: 'rm558576mottu'
+  resourceGroup: 'chal-mottu'
+  location: 'eastus'
+  containerPort: 8080
 
 steps:
   - checkout: self
@@ -42,7 +34,32 @@ steps:
         $(imageTag)
       buildContext: '$(Build.SourcesDirectory)'
 
-  - script: |
-      echo "✅ Imagem publicada com sucesso!"
-      echo "Imagem: $(acrLoginServer)/$(imageRepository):$(imageTag)"
-    displayName: 'Mostrar imagem publicada'
+  - task: AzureCLI@2
+    displayName: 'Deploy no Azure Container Instances'
+    inputs:
+      azureSubscription: '$(azureSubscription)'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        set -e
+        ACR_NAME='$(acrName)'
+        ACR_LOGIN_SERVER='$(acrLoginServer)'
+        IMAGE_NAME='$(imageRepository)'
+        TAG='$(imageTag)'
+        ACI_NAME='$(aciName)'
+        RESOURCE_GROUP='$(resourceGroup)'
+        LOCATION='$(location)'
+        PORT='$(containerPort)'
+        az acr login --name $ACR_NAME
+        az container delete --name $ACI_NAME --resource-group $RESOURCE_GROUP --yes --only-show-errors || true
+        az container create \
+          --name $ACI_NAME \
+          --resource-group $RESOURCE_GROUP \
+          --location $LOCATION \
+          --image $ACR_LOGIN_SERVER/$IMAGE_NAME:$TAG \
+          --cpu 1 \
+          --memory 1.5 \
+          --dns-name-label $ACI_NAME \
+          --ports $PORT \
+          --registry-login-server $ACR_LOGIN_SERVER \
+          --assign-identity
