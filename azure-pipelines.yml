@@ -64,6 +64,7 @@ steps:
           --memory 1.5 \
           --dns-name-label $ACI_NAME \
           --ports $PORT \
+          --os-type Linux
           --registry-login-server $ACR_LOGIN_SERVER \
           --registry-username '$(acrUsername)' \
           --registry-password '$(acrPassword)'
