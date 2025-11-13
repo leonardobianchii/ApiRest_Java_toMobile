@@ -1,4 +1,4 @@
-# 🚀 Mototrack – Projeto Sprint 4 (DevOps Tools & Cloud Computing) Prof Antonio
+# 🚀 Mototrack – Projeto Sprint 4 (DevOps Tools & Cloud Computing)
 
 ## 👥 Integrantes do Grupo
 
